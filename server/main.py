@@ -20,6 +20,11 @@ app = Sanic("Therminator")
 CORS(app, resources={r"/*": {"origins": "*"}})
 
 
+@app.exception(Exception)
+async def handle_all(request, exception):
+    return json_response({"error": "Something went wrong"}, status=500)
+
+
 @app.listener("before_server_start")
 async def config(server: Sanic):
     server.ctx.battery = BatterySensor()
@@ -299,4 +304,4 @@ async def update_display(request: Request):
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=200, debug=True, dev=True)
+    app.run(host="0.0.0.0", port=200)
